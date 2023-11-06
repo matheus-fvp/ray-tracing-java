@@ -40,18 +40,4 @@ public class ObjModel {
         }
     }
 
-    public void saveModel(String filename) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for (Vertex vertex : vertices) {
-                writer.write(String.format("v %.8f %.8f %.8f\n", vertex.getX(), vertex.getY(), vertex.getZ()));
-            }
-
-            for (Face face : faces) {
-                writer.write(String.format("f %d %d %d\n", face.getV1(), face.getV2(), face.getV3()));
-            }
-        } catch (IOException e) {
-            System.out.println("Error to save Model: " + e.getMessage());
-        }
-    }
-
 }

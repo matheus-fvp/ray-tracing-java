@@ -1,4 +1,4 @@
-package org.example.unity_test;
+package org.example.unit_test;
 
 import org.example.geometry.Vec3;
 import org.junit.Test;
