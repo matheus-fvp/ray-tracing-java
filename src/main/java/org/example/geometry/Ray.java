@@ -10,7 +10,7 @@ public class Ray {
 
     public Ray(Vec3 origin, Vec3 direction) {
         this.origin = origin;
-        this.direction = Vec3.unitVector(direction);
+        this.direction = direction.unitVector();
     }
 
     public Vec3 getOrigin() {
@@ -22,7 +22,7 @@ public class Ray {
     }
 
     public Vec3 at(double t) {
-        return Vec3.sum(origin, Vec3.multiplicationByScalar(t, direction));
+        return origin.sum(direction.multiplicationByScalar(t));
     }
 
 }

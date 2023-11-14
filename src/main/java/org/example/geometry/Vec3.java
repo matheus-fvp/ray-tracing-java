@@ -1,52 +1,44 @@
 package org.example.geometry;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 public class Vec3 {
 
-    private double[] e = new double[3];
+    private double x;
+    private double y;
+    private double z;
 
     public Vec3() {
     }
 
     public Vec3(double x, double y, double z) {
-        this.e[0] = x;
-        this.e[1] = y;
-        this.e[2] = z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public double getX() {
-        return this.e[0];
+        return this.x;
     }
 
     public double getY() {
-        return this.e[1];
+        return this.y;
     }
 
     public double getZ() {
-        return this.e[2];
+        return this.z;
     }
 
     public Vec3 opposite() {
         return new Vec3(-this.getX(), -this.getY(), -this.getZ());
     }
 
-    public void sum(Vec3 v) {
-        this.e[0] += v.getX();
-        this.e[1] += v.getY();
-        this.e[2] += v.getZ();
+    public Vec3 sum(Vec3 v) {
+        return new Vec3(this.getX() + v.getX(), this.getY() + v.getY(), this.getZ() + v.getZ());
     }
 
-    public void multiplicationByScalar(double scalar) {
-        this.e[0] *= scalar;
-        this.e[1] *= scalar;
-        this.e[1] *= scalar;
-    }
-
-    public void divisionByScalar(double scalar) {
-        this.e[0] /= scalar;
-        this.e[1] /= scalar;
-        this.e[1] /= scalar;
+    public Vec3 multiplicationByScalar(double scalar) {
+        return new Vec3(scalar * this.getX(), scalar * this.getY(), scalar * this.getZ());
     }
 
     public double length() {
@@ -54,48 +46,42 @@ public class Vec3 {
     }
 
     public double length_squared() {
-        return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
+        return x * x + y * y + y * y;
     }
 
-    public static Vec3 sum(Vec3 u, Vec3 v) {
-        return new Vec3(u.getX() + v.getX(), u.getY() + v.getY(), u.getZ() + v.getZ());
+    public Vec3 subtraction(Vec3 v) {
+        return new Vec3(this.getX() - v.getX(), this.getY() - v.getY(), this.getZ() - v.getZ());
     }
 
-    public static Vec3 subtraction(Vec3 u, Vec3 v) {
-        return new Vec3(u.getX() - v.getX(), u.getY() - v.getY(), u.getZ() - v.getZ());
+    public Vec3 multiplication(Vec3 v) {
+        return new Vec3(this.getX() * v.getX(), this.getY() * v.getY(), this.getZ() * v.getZ());
     }
 
-    public static Vec3 multiplication(Vec3 u, Vec3 v) {
-        return new Vec3(u.getX() * v.getX(), u.getY() * v.getY(), u.getZ() * v.getZ());
+    public Vec3 divisionByScalar(double scalar) {
+        return new Vec3(this.getX() / scalar, this.getY() / scalar, this.getZ() / scalar);
     }
 
-    public static Vec3 multiplicationByScalar(double scalar, Vec3 v) {
-        return new Vec3(scalar*v.getX(), scalar*v.getY(), scalar*v.getZ());
+    public double dot(Vec3 v) {
+        return this.getX() * v.getX()
+                + this.getY() * v.getY()
+                + this.getZ() * v.getZ();
     }
 
-    public static Vec3 divisionByScalar(double scalar, Vec3 v) {
-        return new Vec3(v.getX() / scalar, v.getY() / scalar, v.getZ() / scalar);
+    public Vec3 cross(Vec3 other) {
+        double resultX = this.getY() * other.getZ() - this.getZ() * other.getY();
+        double resultY = this.getZ() * other.getX() - this.getX() * other.getZ();
+        double resultZ = this.getX() * other.getY() - this.getY() * other.getX();
+
+        return new Vec3(resultX, resultY, resultZ);
     }
 
-    public static double dot(Vec3 u, Vec3 v) {
-        return u.getX() * v.getX()
-                + u.getY() * v.getY()
-                + u.getZ() * v.getZ();
-    }
-
-    public static Vec3 cross(Vec3 u, Vec3 v) {
-        return new Vec3(u.getY() * v.getZ() - u.getZ() * v.getY(),
-                u.getZ() * v.getX() - u.getX() * v.getZ(),
-                u.getX() * v.getY() - u.getY() * v.getX());
-    }
-
-    public static Vec3 unitVector(Vec3 v) {
-        return new Vec3(v.getX()/v.length(), v.getY()/v.length(), v.getZ()/v.length());
+    public Vec3 unitVector() {
+        return new Vec3(this.getX()/this.length(), this.getY()/this.length(), this.getZ()/this.length());
     }
 
     @Override
     public String toString() {
-        return "Vec3(" + this.e[0] + " " + this.e[1] + " " + this.e[2] + ")";
+        return "Vec3(" + this.x + " " + this.y + " " + this.z + ")";
     }
 
     @Override
@@ -103,11 +89,12 @@ public class Vec3 {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vec3 vec3 = (Vec3) o;
-        return Arrays.equals(e, vec3.e);
+        return Double.compare(x, vec3.x) == 0 && Double.compare(y, vec3.y) == 0 && Double.compare(z, vec3.z) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(e);
+        return Objects.hash(x, y, z);
     }
+
 }

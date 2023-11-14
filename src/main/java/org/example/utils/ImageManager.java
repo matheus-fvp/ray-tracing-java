@@ -65,6 +65,7 @@ public class ImageManager {
         saveCircle(400, 400, pathFolder + "circle");
         saveGradient(400, 400, pathFolder  + "gradient");
         saveSquare(400, 400, pathFolder + "square");
+        scanner.close();
     }
 
 }
