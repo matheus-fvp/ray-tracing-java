@@ -14,18 +14,18 @@ public class App
     public static void main( String[] args )
     {
         double aspectRatio = 16.0 / 9.0;
-        int imWidth = 600;
+        int imWidth = 800;
 
         //calculate the image height, and ensure that it's at least 1
-        int imHeight = (int) (imWidth / aspectRatio);
+        int imHeight = (int)(imWidth / aspectRatio);
         imHeight = (imHeight < 1) ? 1 : imHeight;
 
         BufferedImage imagem = new BufferedImage(imWidth, imHeight, BufferedImage.TYPE_INT_RGB);
 
         //Camera
         double focalLenght = 1.0;
-        double viewportHeight = 2;
-        double viewportWidth = viewportHeight * ((imWidth * 1.0) / imHeight);
+        double viewportHeight = 2.0;
+        double viewportWidth = viewportHeight * ((imWidth * 1.0)/ imHeight);
         Vec3 cameraCenter = new Vec3(0, 0, 0);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
@@ -44,7 +44,7 @@ public class App
 
         Vec3 pixel00_loc = viewportUpperLeft.sum(pixelDeltaU.sum(pixelDeltaV).multiplicationByScalar(0.5));
 
-        Triangle t = new Triangle(new Vec3(0.5, 0, -1), new Vec3(0.5, -0.5, -1), new Vec3(0, 0.5, -1));
+        Triangle t = new Triangle(new Vec3(-0.5, -1, -2), new Vec3(0.5, -1, -2), new Vec3(0, 0.5, -2));
         for(int j = 0; j < imHeight; ++j) {
             for(int i = 0; i < imWidth; ++i) {
                 Vec3 pixelCenter = pixel00_loc.sum(pixelDeltaU.multiplicationByScalar(i));
@@ -80,7 +80,6 @@ public class App
 
     private static Color rayColor(Ray ray, Triangle t) {
         if(t.intersect(ray)) {
-            System.out.println("hello");
             return new Color(1.0f, 0, 0);
         }
 
