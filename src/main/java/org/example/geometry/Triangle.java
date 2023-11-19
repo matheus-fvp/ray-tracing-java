@@ -1,5 +1,8 @@
 package org.example.geometry;
 
+/**
+ * Class representing a triangle in 3D space.
+ * */
 public class Triangle {
     private static final double EPSILON = 0.0000001;
 
@@ -7,12 +10,23 @@ public class Triangle {
     private Vec3 v1;
     private Vec3 v2;
 
+    /**
+     * Constructs a Triangle with three vertices.
+     * @param v0 The first vertex.
+     * @param v1 The second vertex.
+     * @param v2 The third vertex.
+     */
     public Triangle(Vec3 v0, Vec3 v1, Vec3 v2) {
         this.v0 = v0;
         this.v1 = v1;
         this.v2 = v2;
     }
 
+    /**
+     * Checks if a given ray intersects with the triangle.
+     * @param ray The ray to check for intersection.
+     * @return True if the ray intersects with the triangle, false otherwise.
+     */
     public boolean intersect(Ray ray) {
         Vec3 edge1 = v1.subtraction(v0);
         Vec3 edge2 = v2.subtraction(v0);
