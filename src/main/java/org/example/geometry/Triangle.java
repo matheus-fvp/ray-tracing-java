@@ -1,14 +1,16 @@
 package org.example.geometry;
 
+import org.example.models.Vertex;
+
 /**
  * Class representing a triangle in 3D space.
  * */
 public class Triangle {
     private static final double EPSILON = 0.0000001;
 
-    private Vec3 v0;
-    private Vec3 v1;
-    private Vec3 v2;
+    private Vertex v0;
+    private Vertex v1;
+    private Vertex v2;
 
     /**
      * Constructs a Triangle with three vertices.
@@ -16,7 +18,7 @@ public class Triangle {
      * @param v1 The second vertex.
      * @param v2 The third vertex.
      */
-    public Triangle(Vec3 v0, Vec3 v1, Vec3 v2) {
+    public Triangle(Vertex v0, Vertex v1, Vertex v2) {
         this.v0 = v0;
         this.v1 = v1;
         this.v2 = v2;
@@ -28,8 +30,8 @@ public class Triangle {
      * @return True if the ray intersects with the triangle, false otherwise.
      */
     public boolean intersect(Ray ray) {
-        Vec3 edge1 = v1.subtraction(v0);
-        Vec3 edge2 = v2.subtraction(v0);
+        Vec3 edge1 = v1.getPoint().subtraction(v0.getPoint());
+        Vec3 edge2 = v2.getPoint().subtraction(v0.getPoint());
         Vec3 h = ray.getDirection().cross(edge2);
         double a = edge1.dot(h);
 
@@ -38,7 +40,7 @@ public class Triangle {
         }
 
         double f = 1.0 / a;
-        Vec3 s = ray.getOrigin().subtraction(v0);
+        Vec3 s = ray.getOrigin().subtraction(v0.getPoint());
         double u = f * (s.dot(h));
 
         if (u < 0.0 || u > 1.0) {
@@ -57,4 +59,8 @@ public class Triangle {
         return t > EPSILON;
     }
 
+    @Override
+    public String toString() {
+        return String.format("<%s, %s, %s>", v0, v1, v2);
+    }
 }

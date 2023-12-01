@@ -3,28 +3,33 @@ package org.example;
 import org.example.geometry.Ray;
 import org.example.geometry.Triangle;
 import org.example.geometry.Vec3;
+import org.example.models.ObjLoader;
+import org.example.models.ObjModel;
+import org.example.models.Vertex;
 import org.example.utils.ImageManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
 
 
 public class App 
 {
-    public static void main( String[] args )
+    public static void main(String[] args) throws Exception
     {
         double aspectRatio = 16.0 / 9.0;
-        int imWidth = 800;
+        int imWidth = 600;
 
         //calculate the image height, and ensure that it's at least 1
         int imHeight = (int)(imWidth / aspectRatio);
-        imHeight = (imHeight < 1) ? 1 : imHeight;
+        //imHeight = (imHeight < 1) ? 1 : imHeight;
 
         BufferedImage imagem = new BufferedImage(imWidth, imHeight, BufferedImage.TYPE_INT_RGB);
 
         //Camera
-        double focalLenght = 1.0;
-        double viewportHeight = 2.0;
+        double focalLenght = 1;
+        double viewportHeight = 1.0;
         double viewportWidth = viewportHeight * ((imWidth * 1.0)/ imHeight);
         Vec3 cameraCenter = new Vec3(0, 0, 0);
 
@@ -44,7 +49,14 @@ public class App
 
         Vec3 pixel00_loc = viewportUpperLeft.sum(pixelDeltaU.sum(pixelDeltaV).multiplicationByScalar(0.5));
 
-        Triangle t = new Triangle(new Vec3(-0.5, -1, -2), new Vec3(0.5, -1, -2), new Vec3(0, 0.5, -2));
+        Vertex v1 = new Vertex(new Vec3(-0.5, -1, -2));
+        Vertex v2 = new Vertex(new Vec3(0.5, -1, -2));
+        Vertex v3 = new Vertex(new Vec3(0, 0.5, -2));
+        Triangle t = new Triangle(v1, v2, v3);
+
+        ObjModel objModel = ObjLoader.parseFile(new File("assets/seahorse.obj"));
+        objModel.resizingObj();
+        List<Triangle> triangles = objModel.getFaces();
         for(int j = 0; j < imHeight; ++j) {
             for(int i = 0; i < imWidth; ++i) {
                 Vec3 pixelCenter = pixel00_loc.sum(pixelDeltaU.multiplicationByScalar(i));
@@ -53,13 +65,21 @@ public class App
                 Vec3 rayDirection = pixelCenter.subtraction(cameraCenter);
                 Ray ray = new Ray(pixelCenter, rayDirection);
 
-                Color rayColor = rayColor(ray, t);
-                imagem.setRGB(i, j, rayColor.getRGB());
+                for (Triangle triangle : triangles) {
+                    boolean isIntersect = triangle.intersect(ray);
+                    Color rayColor = rayColor(ray, triangle);
+                    imagem.setRGB(i, j, rayColor.getRGB());
+                    if (isIntersect) break;
+                }
+
+                /*Color rayColor = rayColor(ray, triangles[0]);
+                imagem.setRGB(i, j, rayColor.getRGB());*/
+
+
             }
         }
-        System.out.println(imHeight);
 
-        ImageManager.saveImage(imagem, "ray.png");
+        ImageManager.saveImage(imagem, "assets/ray.png");
     }
 
     private static Color rayColor(Ray ray) {

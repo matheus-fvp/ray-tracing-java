@@ -1,18 +1,15 @@
 package org.example.unit_test;
 
-import org.example.models.Face;
-import org.example.models.ObjModel;
-import org.example.models.Vertex;
+import org.example.models.ObjLoader;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ObjModelTest {
-    private ObjModel objModel;
+    private ObjLoader objModel;
 
     @Before
     public void setUp() {
-        objModel = new ObjModel();
+        objModel = new ObjLoader();
     }
 
     @Test

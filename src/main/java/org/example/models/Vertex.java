@@ -1,45 +1,25 @@
 package org.example.models;
 
-import java.util.Objects;
+import org.example.geometry.Vec3;
+
 
 public class Vertex {
 
-    private float x;
-    private float y;
-    private float z;
+    private Vec3 point;
 
     public Vertex() {
     }
 
-    public Vertex(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Vertex(Vec3 point) {
+        this.point = point;
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getZ() {
-        return z;
+    public Vec3 getPoint() {
+        return point;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vertex vertex = (Vertex) o;
-        return Float.compare(x, vertex.x) == 0 && Float.compare(y, vertex.y) == 0 && Float.compare(z, vertex.z) == 0;
+    public String toString() {
+        return String.format("<%s>", point);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, z);
-    }
-
 }
