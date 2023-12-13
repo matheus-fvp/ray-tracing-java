@@ -19,19 +19,19 @@ public class App
     public static void main(String[] args) throws Exception
     {
         double aspectRatio = 16.0 / 9.0;
-        int imWidth = 600;
+        int imWidth = 400;
 
         //calculate the image height, and ensure that it's at least 1
         int imHeight = (int)(imWidth / aspectRatio);
-        //imHeight = (imHeight < 1) ? 1 : imHeight;
+        imHeight = (imHeight < 1) ? 1 : imHeight;
 
         BufferedImage imagem = new BufferedImage(imWidth, imHeight, BufferedImage.TYPE_INT_RGB);
 
         //Camera
-        double focalLenght = 1;
-        double viewportHeight = 1.0;
-        double viewportWidth = viewportHeight * ((imWidth * 1.0)/ imHeight);
-        Vec3 cameraCenter = new Vec3(0, 0, 0);
+        double focalLenght = 1.0d;
+        double viewportHeight = 2.0d;
+        double viewportWidth = viewportHeight * (imWidth / (double)imHeight);
+        Vec3 cameraCenter = new Vec3(0d, 0d, 0d);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
         Vec3 viewportU = new Vec3(viewportWidth, 0, 0);
@@ -43,26 +43,31 @@ public class App
 
         // Calculate the location of the upper left pixel.
 
-        Vec3 viewportUpperLeft = cameraCenter.subtraction(new Vec3(0, 0, focalLenght));
-        viewportUpperLeft = viewportUpperLeft.subtraction(viewportU.divisionByScalar(2));
-        viewportUpperLeft = viewportUpperLeft.subtraction(viewportV.divisionByScalar(2));
+        Vec3 viewportUpperLeft = cameraCenter.subtraction(new Vec3(0d, 0d, focalLenght));
+        viewportUpperLeft = viewportUpperLeft.subtraction(viewportU.divisionByScalar(2.0d));
+        viewportUpperLeft = viewportUpperLeft.subtraction(viewportV.divisionByScalar(2.0d));
 
-        Vec3 pixel00_loc = viewportUpperLeft.sum(pixelDeltaU.sum(pixelDeltaV).multiplicationByScalar(0.5));
-
-        Vertex v1 = new Vertex(new Vec3(-0.5, -1, -2));
-        Vertex v2 = new Vertex(new Vec3(0.5, -1, -2));
-        Vertex v3 = new Vertex(new Vec3(0, 0.5, -2));
-        Triangle t = new Triangle(v1, v2, v3);
+        Vec3 pixel00_loc = viewportUpperLeft.sum(pixelDeltaU.sum(pixelDeltaV).multiplicationByScalar(0.5d));
 
         ObjModel objModel = ObjLoader.parseFile(new File("assets/seahorse.obj"));
-        objModel.resizingObj();
+        objModel.resizingObj(); //resize the obj
+
+        Vec3 objCenter = ObjModel.calculateObjCenter(objModel); //calculate the center of mass
+        Vec3 translationDirection = cameraCenter.subtraction(objCenter).unitVector();
+        double translationDistance = 5.0;
+
+        for (Vertex vertex : objModel.getVertices()) {
+            Vec3 translatedPosition = vertex.getPoint().sum(translationDirection.multiplicationByScalar(translationDistance));
+            vertex.setPoint(translatedPosition);
+        }
+
         List<Triangle> triangles = objModel.getFaces();
         for(int j = 0; j < imHeight; ++j) {
             for(int i = 0; i < imWidth; ++i) {
                 Vec3 pixelCenter = pixel00_loc.sum(pixelDeltaU.multiplicationByScalar(i));
                 pixelCenter = pixelCenter.sum(pixelDeltaV.multiplicationByScalar(j));
 
-                Vec3 rayDirection = pixelCenter.subtraction(cameraCenter);
+                Vec3 rayDirection = pixelCenter.subtraction(cameraCenter).unitVector();
                 Ray ray = new Ray(pixelCenter, rayDirection);
 
                 for (Triangle triangle : triangles) {
@@ -71,11 +76,6 @@ public class App
                     imagem.setRGB(i, j, rayColor.getRGB());
                     if (isIntersect) break;
                 }
-
-                /*Color rayColor = rayColor(ray, triangles[0]);
-                imagem.setRGB(i, j, rayColor.getRGB());*/
-
-
             }
         }
 
@@ -86,7 +86,7 @@ public class App
         if(hit_sphere(new Vec3(0, 0, -1), 0.5, ray)) {
             return new Color(1.0f, 0, 0);
         }
-        Vec3 unitDirection = ray.getDirection();
+        Vec3 unitDirection = ray.getDirection().unitVector();
         float a = (float) (0.5 * (unitDirection.getY() + 1.0));
         Color color1 = new Color(1.0f, 1.0f, 1.0f);
         Color color2 = new Color(0.5f, 0.7f, 1.0f);
@@ -103,7 +103,7 @@ public class App
             return new Color(1.0f, 0, 0);
         }
 
-        Vec3 unitDirection = ray.getDirection();
+        Vec3 unitDirection = ray.getDirection().unitVector();
         float a = (float) (0.5 * (unitDirection.getY() + 1.0));
         Color color1 = new Color(1.0f, 1.0f, 1.0f);
         Color color2 = new Color(0.5f, 0.7f, 1.0f);

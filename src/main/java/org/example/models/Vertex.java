@@ -18,6 +18,10 @@ public class Vertex {
         return point;
     }
 
+    public void setPoint(Vec3 point) {
+        this.point = point;
+    }
+
     @Override
     public String toString() {
         return String.format("<%s>", point);

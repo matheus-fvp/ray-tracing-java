@@ -50,9 +50,23 @@ public class ObjModel {
             Vec3 point = v.getPoint();
             point.setX((point.getX() - minX) / biggerDif);
             point.setY((point.getY() - minX) / biggerDif);
-            point.setZ(Math.abs((point.getZ() - minX) / biggerDif) * -10);
+            point.setZ((point.getZ() - minX) / biggerDif);
         }
 
+    }
+
+    public static Vec3 calculateObjCenter(ObjModel obj) {
+        double sumX = 0d;
+        double sumY = 0d;
+        double sumZ = 0d;
+        double size = obj.vertices.size();
+        for(Vertex v : obj.vertices) {
+            sumX += v.getPoint().getX();
+            sumY += v.getPoint().getY();
+            sumZ += v.getPoint().getZ();
+        }
+
+        return new Vec3(sumX / size, sumY / size, sumZ / size);
     }
 
 }

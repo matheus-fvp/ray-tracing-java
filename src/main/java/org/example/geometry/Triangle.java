@@ -12,12 +12,6 @@ public class Triangle {
     private Vertex v1;
     private Vertex v2;
 
-    /**
-     * Constructs a Triangle with three vertices.
-     * @param v0 The first vertex.
-     * @param v1 The second vertex.
-     * @param v2 The third vertex.
-     */
     public Triangle(Vertex v0, Vertex v1, Vertex v2) {
         this.v0 = v0;
         this.v1 = v1;

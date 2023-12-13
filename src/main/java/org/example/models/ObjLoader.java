@@ -9,6 +9,10 @@ import java.util.List;
 
 public final class ObjLoader {
 
+    /***
+     * Read a obj from a file
+     * @param file The file path where is the obj
+     * */
     public static ObjModel parseFile(File file) throws Exception {
         BufferedReader input = new BufferedReader(new FileReader(file));
 
@@ -41,22 +45,21 @@ public final class ObjLoader {
         return new Vertex(point);
     }
 
-    private static Vertex parseTriangleVertex(String[] data, List<Vertex> vertices) {
-        Vertex vertex = null;
-        if (!data[0].isEmpty()) {
-            int vertexIndex = Integer.parseInt(data[0]) - 1;
-            vertex = vertices.get(vertexIndex);
-        }
-
-        return vertex;
-    }
-
     private static Triangle parseFace(String[] data, List<Vertex> vertices) {
         return new Triangle(
                 parseTriangleVertex(data[1].split("/"), vertices),
                 parseTriangleVertex(data[2].split("/"), vertices),
                 parseTriangleVertex(data[3].split("/"), vertices)
         );
+    }
+
+    private static Vertex parseTriangleVertex(String[] data, List<Vertex> vertices) {
+        Vertex vertex = null;
+        if (!data[0].isEmpty()) {
+            int vertexIndex = Integer.parseInt(data[0]) - 1;
+            vertex = vertices.get(vertexIndex);
+        }
+        return vertex;
     }
 
 }
