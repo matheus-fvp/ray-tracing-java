@@ -53,22 +53,66 @@ This is a simple Java library for basic geometric operations in three-dimensiona
 #### Methods
 - `intersect(Ray ray)`: Checks if a given ray intersects with the triangle.
 
-## Usage
+# ObjLoader Library
 
-To use the library, simply import the classes into your Java project and create instances of the Vec3, Ray, or Triangle classes. You can then perform various geometric operations using the provided methods.
+The `ObjLoader` library is designed to parse and process Wavefront OBJ files, commonly used to represent 3D models. It provides functionality to read an OBJ file, extract vertices, normals, and faces, and perform operations on the loaded 3D model.
 
-```java
-// Example Usage
-Vec3 v1 = new Vec3(1, 2, 3);
-Vec3 v2 = new Vec3(4, 5, 6);
-Vec3 result = v1.sum(v2);
-System.out.println(result); // Output: (5.00, 7.00, 9.00)
+## Classes
 
-Ray ray = new Ray(new Vec3(0, 0, 0), new Vec3(1, 1, 1).unitVector());
-Vec3 pointOnRay = ray.at(2.5);
-System.out.println(pointOnRay); // Output: (2.50, 2.50, 2.50)
+### ObjLoader
+#### Methods
+1. **`parseFile(File file): ObjModel`**
+    - Reads an OBJ file and returns an `ObjModel` containing vertices, normals, and faces.
+    - *Parameters:*
+        - `file`: The file path where the OBJ file is located.
+    - *Returns:* An `ObjModel` representing the 3D model.
 
-Triangle triangle = new Triangle(new Vec3(0, 0, 0), new Vec3(1, 0, 0), new Vec3(0, 1, 0));
-Ray intersectingRay = new Ray(new Vec3(0.25, 0.25, 1), new Vec3(0, 0, -1).unitVector());
-boolean isIntersecting = triangle.intersect(intersectingRay);
-System.out.println(isIntersecting); // Output: true
+2. **`parseVertex(String[] data): Vertex`**
+    - Parses vertex data from a line in the OBJ file.
+    - *Parameters:*
+        - `data`: Array of strings representing vertex data.
+    - *Returns:* A `Vertex` object.
+
+3. **`parseFace(String[] data, List<Vertex> vertices): Triangle`**
+    - Parses face data from a line in the OBJ file.
+    - *Parameters:*
+        - `data`: Array of strings representing face data.
+        - `vertices`: List of vertices from the OBJ file.
+    - *Returns:* A `Triangle` object representing a face.
+
+4. **`parseTriangleVertex(String[] data, List<Vertex> vertices): Vertex`**
+    - Parses a vertex of a triangle from face data in the OBJ file.
+    - *Parameters:*
+        - `data`: Array of strings representing face data.
+        - `vertices`: List of vertices from the OBJ file.
+    - *Returns:* A `Vertex` object.
+
+### ObjModel
+
+#### Fields
+- **`vertices: List<Vertex>`**
+    - List of vertices representing the 3D model.
+
+- **`normals: List<Vertex>`**
+    - List of normals representing the 3D model.
+
+- **`faces: List<Triangle>`**
+    - List of triangles representing the faces of the 3D model.
+
+#### Methods
+1. **`resizingObj(): void`**
+    - Resizes the loaded 3D model to fit within a normalized bounding box.
+
+2. **`calculateObjCenter(ObjModel obj): Vec3`**
+    - Calculates the center of the 3D model.
+    - *Parameters:*
+        - `obj`: The `ObjModel` for which the center needs to be calculated.
+    - *Returns:* A `Vec3` representing the center of the 3D model.
+
+### Vertex
+
+#### Fields
+- **`point: Vec3`**
+    - A 3D point representing the vertex coordinates.
+
+---
