@@ -1,43 +1,72 @@
 package org.example.models;
 
-import java.io.*;
+import org.example.geometry.Triangle;
+import org.example.geometry.Vec3;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjModel {
 
     private List<Vertex> vertices = new ArrayList<>();
-    private List<Face> faces = new ArrayList<>();
+    private List<Vertex> normals = new ArrayList<>();
+    private List<Triangle> faces = new ArrayList<>();
 
     public List<Vertex> getVertices() {
         return vertices;
     }
 
-    public List<Face> getFaces() {
+    public List<Vertex> getNormals() {
+        return normals;
+    }
+
+    public List<Triangle> getFaces() {
         return faces;
     }
 
-    public void loadModel(String filename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("v ")) {
-                    String[] parts = line.split(" ");
-                    float x = Float.parseFloat(parts[1]);
-                    float y = Float.parseFloat(parts[2]);
-                    float z = Float.parseFloat(parts[3]);
-                    vertices.add(new Vertex(x, y, z));
-                } else if (line.startsWith("f ")) {
-                    String[] parts = line.split(" ");
-                    int v1 = Integer.parseInt(parts[1]);
-                    int v2 = Integer.parseInt(parts[2]);
-                    int v3 = Integer.parseInt(parts[3]);
-                    faces.add(new Face(v1, v2, v3));
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error to load the model: " + e.getMessage());
+    public void resizingObj() {
+        double minX = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+
+        double minY = Double.MAX_VALUE;
+        double maxY = Double.MIN_VALUE;
+
+        double minZ = Double.MAX_VALUE;
+        double maxZ = Double.MIN_VALUE;
+
+        for(Vertex v: vertices) {
+            maxX = Math.max(maxX, v.getPoint().getX());
+            minX = Math.min(minX, v.getPoint().getX());
+
+            maxY = Math.max(maxY, v.getPoint().getX());
+            minY = Math.min(minY, v.getPoint().getX());
+
+            maxZ = Math.max(maxZ, v.getPoint().getX());
+            minZ = Math.min(minZ, v.getPoint().getX());
         }
+
+        double biggerDif = Math.max(Math.max(maxX - minX, maxY - minX), maxZ - minZ);
+        for(Vertex v : vertices) {
+            Vec3 point = v.getPoint();
+            point.setX((point.getX() - minX) / biggerDif);
+            point.setY((point.getY() - minX) / biggerDif);
+            point.setZ((point.getZ() - minX) / biggerDif);
+        }
+
+    }
+
+    public static Vec3 calculateObjCenter(ObjModel obj) {
+        double sumX = 0d;
+        double sumY = 0d;
+        double sumZ = 0d;
+        double size = obj.vertices.size();
+        for(Vertex v : obj.vertices) {
+            sumX += v.getPoint().getX();
+            sumY += v.getPoint().getY();
+            sumZ += v.getPoint().getZ();
+        }
+
+        return new Vec3(sumX / size, sumY / size, sumZ / size);
     }
 
 }

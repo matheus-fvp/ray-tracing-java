@@ -7,49 +7,40 @@ import java.util.Objects;
  * */
 public class Vec3 {
 
-    double x, y, z;
+    private double x, y, z;
 
-    /**
-     * Constructs a Vec3 with specified x, y, and z coordinates.
-     * @param x The x-coordinate.
-     * @param y The y-coordinate.
-     * @param z The z-coordinate.
-     */
     public Vec3(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    /**
-     * Constructs a Vec3 with default coordinates (0, 0, 0).
-     * */
     public Vec3() {
-        this(0, 0, 0);
+        this(0.0, 0.0, 0.0);
     }
 
-    /**
-     * Gets the x-coordinate of the vector.
-     * @return The x-coordinate.
-     */
     public double getX() {
         return x;
     }
 
-    /**
-     * Gets the y-coordinate of the vector.
-     * @return The y-coordinate.
-     */
     public double getY() {
         return y;
     }
 
-    /**
-     * Gets the z-coordinate of the vector.
-     * @return The z-coordinate.
-     */
     public double getZ() {
         return z;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
     }
 
     /**
@@ -57,7 +48,7 @@ public class Vec3 {
      * @return The opposite vector.
      */
     public Vec3 opposite() {
-        return new Vec3(-x, -y, -z);
+        return this.multiplicationByScalar(-1.0);
     }
 
     /**
@@ -145,23 +136,15 @@ public class Vec3 {
      */
     public Vec3 unitVector() {
         double length = length();
-        return new Vec3(x / length, y / length, z / length);
+        return multiplicationByScalar(1.0 / length);
     }
 
-    /**
-     * Returns a string representation of the vector.
-     * @return A string representation of the vector.
-     */
     @Override
     public String toString() {
         return String.format("(%3.2f, %3.2f, %3.2f)", this.x, this.y, this.z);
     }
 
-    /**
-     * Checks if this vector is equal to another object.
-     * @param o The object to compare.
-     * @return True if the vectors are equal, false otherwise.
-     */
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,10 +153,7 @@ public class Vec3 {
         return Double.compare(x, vec3.x) == 0 && Double.compare(y, vec3.y) == 0 && Double.compare(z, vec3.z) == 0;
     }
 
-    /**
-     * Computes the hash code of the vector.
-     * @return The hash code of the vector.
-     */
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y, z);
