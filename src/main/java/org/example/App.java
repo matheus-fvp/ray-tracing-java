@@ -79,7 +79,7 @@ public class App
             }
         }
 
-        ImageManager.saveImage(imagem, "assets/ray.png");
+        ImageManager.saveImage(imagem, "assets/seahorse.png");
     }
 
     private static Color rayColor(Ray ray) {
